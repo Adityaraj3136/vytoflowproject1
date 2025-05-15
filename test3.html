@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>✯ My Mood Journal</title>
+  <style>
+    :root {
+      --primary-color: #2e7d32;
+      --background: #e0f2f1;
+      --container-bg: #ffffff;
+      --text-color: #000000;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --background: #121212;
+        --container-bg: #1e1e1e;
+        --text-color: #ffffff;
+      }
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--background);
+      color: var(--text-color);
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .journal-container {
+      background-color: var(--container-bg);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 800px;
+      box-sizing: border-box;
+    }
+
+    h1, h2 {
+      text-align: center;
+      color: var(--primary-color);
+    }
+
+    .mood-entry-section {
+      margin-bottom: 20px;
+    }
+
+    #date {
+      display: block;
+      margin: 0 auto 15px;
+      padding: 5px;
+    }
+
+    .emoji-container {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin: 10px 0;
+      flex-wrap: wrap;
+    }
+
+    .emoji-option {
+      text-align: center;
+      cursor: pointer;
+      font-size: 40px;
+      padding: 10px;
+      border-radius: 8px;
+      transition: transform 0.2s, background-color 0.3s;
+    }
+
+    .emoji-option:hover {
+      transform: scale(1.1);
+      background-color: #f0f0f0;
+    }
+
+    .emoji-option.selected {
+      border: 2px solid var(--primary-color);
+      background-color: #e8f5e9;
+    }
+
+    .emoji-option .label {
+      font-size: 16px;
+      margin-top: 4px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 80px;
+      margin-top: 10px;
+      border-radius: 15px;
+      margin-bottom: 10px;
+      padding: 10px;
+      resize: none;
+    }
+
+    button {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      display: block;
+      margin: 10px auto 0;
+    }
+
+    #calendar-title {
+      margin-top: 30px;
+    }
+
+    #calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+  margin-top: 10px;
+}
+
+#calendar div {
+  background-color: var(--container-bg);
+  color: var(--text-color);
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  height: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  transition: background-color 0.3s, transform 0.2s;
+  cursor: pointer;
+}
+
+#calendar div:hover {
+  background-color: #dcedc8;
+  transform: translateY(-2px);
+}
+
+#calendar div span {
+  font-size: 20px;
+  box-shadow: none !important;
+}
+
+#calendar div .label {
+  font-size: 12px;
+  margin-top: 4px;
+  box-shadow: none !important;
+}
+
+.calendar-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 10px;
+  color: #2e7d32;
+}
+
+.calendar-header div {
+  padding: 5px;
+}
+
+.label {
+  font-size: 0.8em;
+  margin-top: 4px;
+  background-color: transparent;
+  box-shadow: none;
+}
+
+    #aboutBtn {
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+  <div class="journal-container">
+    <h1>🌿 My Mood Journal</h1>
+
+    <!-- Mood input -->
+    <div class="mood-entry-section">
+      <input type="date" id="date">
+
+      <div class="emoji-container">
+        <div class="emoji-option" data-mood="happy">😄<div class="label">Happy</div></div>
+        <div class="emoji-option" data-mood="neutral">😐<div class="label">Neutral</div></div>
+        <div class="emoji-option" data-mood="sad">😢<div class="label">Sad</div></div>
+        <div class="emoji-option" data-mood="angry">😠<div class="label">Angry</div></div>
+        <div class="emoji-option" data-mood="crying">😭<div class="label">Crying</div></div>
+      </div>
+
+      <textarea id="note" placeholder="Write about your day..."></textarea>
+      <button id="saveMood">Save Mood</button>
+    </div>
+
+
+    <div class="calendar-nav" style="display: flex; justify-content: center; align-items: center; gap: 20px; margin-bottom: 10px;">
+      <button id="prevMonth">← Prev</button>
+      <label for="moodFilter">Filter by Mood:</label>
+      <select id="moodFilter">
+        <option value="all">All</option>
+        <option value="happy">Happy</option>
+        <option value="neutral">Neutral</option>
+        <option value="sad">Sad</option>
+        <option value="angry">Angry</option>
+        <option value="crying">Crying</option>
+      </select>
+      <button id="nextMonth">Next →</button>
+    </div>
+    
+    <h2 id="calendar-title"></h2>
+    <div id="calendar-header" style="display: grid; grid-template-columns: repeat(7, 1fr); font-weight: bold;"></div>
+    <div id="calendar"></div>
+
+    
+    <!-- Calendar display -->
+    <!-- <h2 id="calendar-title"></h2> -->
+    <!-- <div style="text-align:center; margin-bottom: 10px;">
+      <label for="moodFilter">Filter by Mood: </label>
+      <select id="moodFilter">
+        <option value="all">All</option>
+        <option value="happy">Happy</option>
+        <option value="neutral">Neutral</option>
+        <option value="sad">Sad</option>
+        <option value="angry">Angry</option>
+        <option value="crying">Crying</option>
+      </select>
+    </div> -->
+    <!-- <div id="calendar-header" class="calendar-header"></div> -->
+    <!-- <div id="calendar"></div> -->
+
+    <button id="aboutBtn">About</button>
+  </div>
+
+  <script>
+    const dateInput = document.getElementById("date");
+    const calendar = document.getElementById("calendar");
+    const saveBtn = document.getElementById("saveMood");
+    const noteInput = document.getElementById("note");
+    const calendarTitle = document.getElementById("calendar-title");
+    let selectedMood = "";
+
+    const today = new Date();
+    const maxDate = today.toISOString().split("T")[0];
+    const minDate = new Date(today);
+    minDate.setDate(minDate.getDate() - 3);
+    dateInput.setAttribute("max", maxDate);
+    dateInput.setAttribute("min", minDate.toISOString().split("T")[0]);
+    dateInput.value = maxDate;
+
+    // === Mood selection with highlighting ===
+    document.querySelectorAll(".emoji-option").forEach(option => {
+      option.addEventListener("click", () => {
+        selectedMood = option.dataset.mood;
+        document.querySelectorAll(".emoji-option").forEach(o => o.classList.remove("selected"));
+        option.classList.add("selected");
+      });
+    });
+
+
+    let currentMonth = today.getMonth();
+let currentYear = today.getFullYear();
+
+const calendarHeader = document.getElementById("calendar-header");
+
+document.getElementById("prevMonth").addEventListener("click", () => {
+  currentMonth--;
+  if (currentMonth < 0) {
+    currentMonth = 11;
+    currentYear--;
+  }
+  renderCalendar();
+});
+
+document.getElementById("nextMonth").addEventListener("click", () => {
+  currentMonth++;
+  if (currentMonth > 11) {
+    currentMonth = 0;
+    currentYear++;
+  }
+  renderCalendar();
+});
+
+document.getElementById("moodFilter").addEventListener("change", renderCalendar);
+
+
+    // === Save mood ===
+    saveBtn.addEventListener("click", () => {
+      const date = dateInput.value;
+      const note = noteInput.value;
+      if (!selectedMood || !date) return alert("Please select mood and date.");
+      const data = JSON.parse(localStorage.getItem("moodData") || "{}");
+      data[date] = { mood: selectedMood, note };
+      localStorage.setItem("moodData", JSON.stringify(data));
+      selectedMood = "";
+      document.querySelectorAll(".emoji-option").forEach(o => o.classList.remove("selected"));
+      noteInput.value = "";
+      renderCalendar();
+    });
+
+    // === Render calendar with emoji + label ===
+   function renderCalendar() {
+  const data = JSON.parse(localStorage.getItem("moodData") || "{}");
+  const filter = document.getElementById("moodFilter").value;
+
+  const monthName = new Date(currentYear, currentMonth).toLocaleString('default', { month: 'long' });
+  calendarTitle.textContent = `${monthName} ${currentYear}`;
+
+  const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+  // Weekdays
+  const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  calendarHeader.innerHTML = daysOfWeek.map(day => `<div>${day}</div>`).join("");
+
+  calendar.innerHTML = "";
+
+  // Fill blank cells
+  for (let i = 0; i < firstDay; i++) {
+    calendar.innerHTML += `<div></div>`;
+  }
+
+  // Fill days
+  for (let i = 1; i <= daysInMonth; i++) {
+    const day = String(i).padStart(2, "0");
+    const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, "0")}-${day}`;
+    const entry = data[dateStr];
+
+    const cell = document.createElement("div");
+    cell.style.cursor = "pointer";
+    cell.style.boxShadow = "0 2px 6px rgba(0,0,0,0.1)";
+    cell.style.borderRadius = "8px";
+
+    if (entry && (filter === "all" || filter === entry.mood)) {
+      cell.innerHTML = `
+        <span style="font-size: 1.5rem;">${moodToEmoji(entry.mood)}</span>
+        <span style="font-size: 0.8rem;">${capitalize(entry.mood)}</span>
+      `;
+      cell.onclick = () => alert(`Note on ${dateStr}: ${entry.note || "No note"}`);
+    } else {
+      cell.textContent = i;
+    }
+
+    cell.addEventListener("mouseenter", () => cell.style.backgroundColor = "#f0f0f0");
+    cell.addEventListener("mouseleave", () => cell.style.backgroundColor = "");
+
+    calendar.appendChild(cell);
+  }
+}
+
+
+// Capitalize mood name for label
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+    function moodToEmoji(mood) {
+      return {
+        happy: "😄",
+        neutral: "😐",
+        sad: "😢",
+        angry: "😠",
+        crying: "😭"
+      }[mood] || "";
+    }
+
+    function capitalize(text) {
+      return text.charAt(0).toUpperCase() + text.slice(1);
+    }
+
+    renderCalendar();
+    document.getElementById("moodFilter").addEventListener("change", renderCalendar);
+
+  </script>
+</body>
+</html>
