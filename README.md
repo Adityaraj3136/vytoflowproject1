@@ -30,7 +30,8 @@ In today's fast-paced life, increasing stress levels among students and professi
 
 ## 📷 Screenshots
 
-> *(Add screenshots or a GIF demo of your app here once available)*
+> *![image](https://github.com/user-attachments/assets/2cd4c9cc-b880-401e-a636-783a99c5a6b5)
+*
 
 ---
 
